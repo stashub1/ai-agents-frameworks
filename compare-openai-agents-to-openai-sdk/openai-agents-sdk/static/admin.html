@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · All Sessions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/admin.css" />
+</head>
+<body>
+  <div class="admin-shell">
+
+    <header class="header">
+      <div class="header-brand">
+        <span class="diamond">◆</span>
+        <div>
+          <div class="header-title">All Sessions</div>
+          <div class="header-subtitle">Admin overview</div>
+        </div>
+      </div>
+      <a href="/" class="btn-ghost">← Back to chat</a>
+    </header>
+
+    <main class="admin-main">
+      <div class="admin-stats" id="adminStats"></div>
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="adminTable">
+          <thead>
+            <tr>
+              <th>Session</th>
+              <th>User</th>
+              <th>Messages</th>
+              <th>Last active</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody id="adminBody"></tbody>
+        </table>
+        <div class="admin-empty" id="adminEmpty" style="display:none">No sessions yet.</div>
+      </div>
+    </main>
+
+  </div>
+  <script src="/static/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat · OpenAI SDK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="diamond">◆</span>
+        <span class="sidebar-title">Sessions</span>
+        <button class="btn-new" id="newChat" title="New conversation">+</button>
+      </div>
+      <div class="session-list" id="sessionList"></div>
+    </aside>
+
+    <!-- Main chat -->
+    <div class="app">
+
+      <header class="header">
+        <div class="header-brand">
+          <div>
+            <div class="header-title" id="headerTitle">Chat</div>
+            <div class="header-subtitle">GPT-4o mini · OpenAI SDK</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <a href="/tasks" class="btn-ghost">Tasks</a>
+          <a href="/admin" class="btn-ghost">All sessions</a>
+        </div>
+      </header>
+
+      <main class="messages" id="messages">
+        <div class="welcome" id="welcome">
+          <div class="welcome-diamond">◆</div>
+          <h2>What can I help with?</h2>
+          <p>Type a message below to begin.</p>
+        </div>
+      </main>
+
+      <footer class="input-area">
+        <div class="input-row">
+          <div class="input-wrapper">
+            <textarea id="input" placeholder="Ask anything…" rows="1"></textarea>
+          </div>
+          <button class="btn-send" id="send" disabled>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 8L14 2L8 14L7 9L2 8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="input-footer">
+          <span>↵ send · shift+↵ newline</span>
+          <span>Streaming · Chat Completions</span>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

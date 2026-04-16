@@ -1,0 +1,28 @@
+.status-badge {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid;
+}
+
+.status-badge.open {
+  color: var(--accent);
+  border-color: var(--accent-mid);
+  background: var(--accent-soft);
+}
+
+.status-badge.closed {
+  color: var(--text-muted);
+  border-color: var(--border);
+  background: transparent;
+}
+
+.task-description {
+  max-width: 340px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
