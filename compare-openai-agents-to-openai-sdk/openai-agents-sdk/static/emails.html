@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tasks</title>
+  <title>Email Logs</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/style.css" />
   <link rel="stylesheet" href="/static/admin.css" />
-  <link rel="stylesheet" href="/static/maintenance.css" />
 </head>
 <body>
   <div class="admin-shell">
@@ -18,8 +17,8 @@
       <div class="header-brand">
         <span class="diamond">◆</span>
         <div>
-          <div class="header-title">Tasks</div>
-          <div class="header-subtitle">Created from chat</div>
+          <div class="header-title">Email Logs</div>
+          <div class="header-subtitle">Sent via chat decisions</div>
         </div>
       </div>
       <a href="/" class="btn-ghost">← Back to chat</a>
@@ -31,22 +30,19 @@
         <table class="admin-table" id="table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Description</th>
+              <th>#</th>
               <th>User</th>
-              <th>Status</th>
-              <th>Created</th>
-              <th></th>
+              <th>Email</th>
+              <th>Sent at</th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
         </table>
-        <div class="admin-empty" id="empty" style="display:none">No tasks yet.</div>
+        <div class="admin-empty" id="empty" style="display:none">No emails sent yet.</div>
       </div>
     </main>
 
   </div>
-  <script src="/static/maintenance.js"></script>
+  <script src="/static/emails.js"></script>
 </body>
 </html>

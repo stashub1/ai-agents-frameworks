@@ -35,6 +35,7 @@ async function load() {
   tbody.innerHTML = sessions.map(s => `
     <tr>
       <td><a class="session-link" href="/?session=${s.id}">${escapeHtml(s.title)}</a></td>
+      <td class="dim">${s.id.slice(0, 8)}</td>
       <td><span class="user-badge">${s.user_id.slice(0, 8)}</span></td>
       <td class="num">${s.message_count}</td>
       <td class="dim">${formatDate(s.updated_at)}</td>

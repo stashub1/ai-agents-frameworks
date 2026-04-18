@@ -18,6 +18,12 @@
   background: transparent;
 }
 
+.mine-dot::after {
+  content: "●";
+  color: #4caf50;
+  font-size: 10px;
+}
+
 .task-description {
   max-width: 340px;
   color: var(--text-muted);

@@ -12,6 +12,7 @@ function escapeHtml(text) {
 }
 
 async function load() {
+  const currentUserId = localStorage.getItem("userId");
   const res = await fetch("/api/tasks");
   const tasks = await res.json();
 
@@ -33,11 +34,13 @@ async function load() {
   // Table rows
   tbody.innerHTML = tasks.map(t => `
     <tr>
+      <td class="dim">${t.id}</td>
       <td>${escapeHtml(t.title)}</td>
       <td><span class="task-description" title="${escapeHtml(t.description)}">${escapeHtml(t.description)}</span></td>
       <td><span class="user-badge">${escapeHtml(t.user_id.slice(0, 8))}</span></td>
       <td><span class="status-badge ${escapeHtml(t.status)}">${escapeHtml(t.status)}</span></td>
       <td class="dim">${formatDate(t.created_at)}</td>
+      <td class="${t.user_id === currentUserId ? 'mine-dot' : ''}"></td>
     </tr>`).join("");
 }
 

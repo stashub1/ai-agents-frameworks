@@ -7,7 +7,7 @@ from src.llm_config import get_default_model
 
 
 class RouterDecision(BaseModel):
-    agent: Literal["chat_agent", "task_manager"]
+    agent: Literal["chat_agent", "task_manager", "send_user_data"]
 
 
 router_agent = Agent(
@@ -19,6 +19,7 @@ Classify the user message to route it to the correct agent.
 
 - "task_manager": the user is requesting an action to be done, asking to create or track a task,
   or assigning work to be completed
+- "send_user_data": the user is asking to send their data or info to their email
 - "chat_agent": everything else — general questions, conversation, information requests
 """,
 )

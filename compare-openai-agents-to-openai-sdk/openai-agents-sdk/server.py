@@ -1,8 +1,14 @@
 # load_dotenv must run before any agents imports — _debug flags are set at import time
 from dotenv import load_dotenv
+
 load_dotenv()
 
+from agents import set_default_openai_api
+
+set_default_openai_api("chat_completions")
+
 import json
+import logging
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -11,9 +17,23 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from src.database import init_db
-from src.services.storage import delete_session, get_history, list_all_sessions, list_sessions, list_tasks
+from src.services.storage import (
+    delete_session,
+    get_history,
+    list_all_sessions,
+    list_email_logs,
+    list_sessions,
+    list_tasks,
+)
 from src.tracing import setup_tracing
 from src.workflows import stream_response
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+    force=True,
+)
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 setup_tracing()
 
@@ -48,6 +68,11 @@ async def tasks():
     return FileResponse("static/maintenance.html")
 
 
+@app.get("/emails")
+async def emails():
+    return FileResponse("static/emails.html")
+
+
 # ── API ───────────────────────────────────────────────────
 @app.get("/api/sessions")
 async def get_sessions(user_id: str):
@@ -62,6 +87,11 @@ async def get_all_sessions():
 @app.get("/api/tasks")
 async def get_tasks():
     return await list_tasks()
+
+
+@app.get("/api/email-logs")
+async def get_email_logs():
+    return await list_email_logs()
 
 
 @app.get("/api/sessions/{session_id}")

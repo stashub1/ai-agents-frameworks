@@ -30,11 +30,12 @@
         <div class="header-brand">
           <div>
             <div class="header-title" id="headerTitle">Chat</div>
-            <div class="header-subtitle">GPT-4o mini · OpenAI</div>
+            <div class="header-subtitle">GPT-4o mini · OpenAI · <span id="sessionBadge"></span></div>
           </div>
         </div>
         <div style="display:flex;gap:10px">
           <a href="/tasks" class="btn-ghost">Tasks</a>
+          <a href="/emails" class="btn-ghost">Emails</a>
           <a href="/admin" class="btn-ghost">All sessions</a>
         </div>
       </header>
@@ -65,6 +66,18 @@
       </footer>
 
     </div>
+
+    <!-- Agent call log panel -->
+    <aside class="logs-panel" id="logsPanel">
+      <div class="logs-header">
+        <span class="logs-title">Agent Call Log</span>
+        <button class="logs-clear" id="logsClear" title="Clear log">×</button>
+      </div>
+      <div class="logs-body" id="logsBody">
+        <div class="logs-empty" id="logsEmpty">No calls yet</div>
+      </div>
+    </aside>
+
   </div>
 
   <script src="/static/app.js"></script>

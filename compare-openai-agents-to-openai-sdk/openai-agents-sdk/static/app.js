@@ -20,7 +20,17 @@ const inputEl     = document.getElementById("input");
 const sendBtn     = document.getElementById("send");
 const newChatBtn  = document.getElementById("newChat");
 const sessionList = document.getElementById("sessionList");
-const headerTitle = document.getElementById("headerTitle");
+const headerTitle  = document.getElementById("headerTitle");
+const sessionBadge = document.getElementById("sessionBadge");
+const logsBody    = document.getElementById("logsBody");
+const logsEmpty   = document.getElementById("logsEmpty");
+const logsClear   = document.getElementById("logsClear");
+
+function updateSessionBadge() {
+  sessionBadge.textContent = sessionId.slice(0, 8);
+}
+
+updateSessionBadge();
 
 // ── marked config ─────────────────────────────────────────
 marked.setOptions({ breaks: true, gfm: true });
@@ -105,6 +115,7 @@ function markActiveSession() {
 async function switchSession(id, title) {
   sessionId = id;
   localStorage.setItem("sessionId", sessionId);
+  updateSessionBadge();
   markActiveSession();
   headerTitle.textContent = title || "Chat";
 
@@ -216,6 +227,87 @@ function appendAssistantMessage(agentName = null) {
   return el.querySelector(".msg-content");
 }
 
+// ── Agent call log ────────────────────────────────────────
+logsClear.addEventListener("click", () => {
+  logsBody.innerHTML = "";
+  const placeholder = document.createElement("div");
+  placeholder.className = "logs-empty";
+  placeholder.textContent = "No calls yet";
+  logsBody.appendChild(placeholder);
+});
+
+function appendLogEntry(call) {
+  const empty = logsBody.querySelector(".logs-empty");
+  if (empty) empty.remove();
+
+  const entry = document.createElement("div");
+  entry.className = "log-entry";
+
+  const isRouter = call.role === "router";
+  const badgeClass = isRouter ? "log-entry-badge router" : "log-entry-badge";
+  const badgeText  = isRouter ? "router" : "main";
+
+  const chips = [
+    call.model && `model: ${call.model}`,
+    call.temperature != null && `temp: ${call.temperature}`,
+    call.max_tokens  != null && `max: ${call.max_tokens}`,
+    call.message_count != null && `msgs: ${call.message_count}`,
+  ].filter(Boolean);
+
+  const toolsText = call.tools && call.tools.length > 0
+    ? call.tools.join(", ")
+    : "none";
+
+  entry.innerHTML = `
+    <div class="log-entry-header">
+      <span class="${badgeClass}">${badgeText}</span>
+      <span class="log-entry-name">${escapeHtml(call.name || "")}</span>
+    </div>
+    <div class="log-entry-body">
+      <div class="log-meta">
+        ${chips.map(c => `<span class="log-meta-chip">${escapeHtml(c)}</span>`).join("")}
+      </div>
+      <div class="log-field">
+        <div class="log-field-label">System prompt</div>
+        <div class="log-field-value">${escapeHtml(call.instructions || "")}</div>
+      </div>
+      <div class="log-field">
+        <div class="log-field-label">Tools</div>
+        <div class="log-field-value">${escapeHtml(toolsText)}</div>
+      </div>
+      ${call.output_type ? `
+      <div class="log-field">
+        <div class="log-field-label">Output type</div>
+        <div class="log-field-value">${escapeHtml(call.output_type)}</div>
+      </div>` : ""}
+    </div>`;
+
+  logsBody.appendChild(entry);
+  logsBody.scrollTop = logsBody.scrollHeight;
+}
+
+function appendDecisionEntry(fnName) {
+  const empty = logsBody.querySelector(".logs-empty");
+  if (empty) empty.remove();
+
+  const entry = document.createElement("div");
+  entry.className = "log-entry";
+  entry.innerHTML = `
+    <div class="log-entry-header">
+      <span class="log-entry-badge fn">function</span>
+      <span class="log-entry-name">${escapeHtml(fnName)}</span>
+    </div>
+    <div class="log-entry-body">
+      <div class="log-field">
+        <div class="log-field-label">Action</div>
+        <div class="log-field-value">Router decided to call this function directly — no agent involved</div>
+      </div>
+    </div>`;
+
+  logsBody.appendChild(entry);
+  logsBody.scrollTop = logsBody.scrollHeight;
+}
+
 // ── Send message ──────────────────────────────────────────
 async function handleSend() {
   const text = inputEl.value.trim();
@@ -261,9 +353,15 @@ async function handleSend() {
           const parsed = JSON.parse(payload);
           if (parsed.routing) {
             setTypingStatus(typingEl, "routing…");
+          } else if (parsed.agent_call) {
+            appendLogEntry(parsed.agent_call);
           } else if (parsed.agent) {
             typingEl.remove();
             contentEl = appendAssistantMessage(parsed.agent);
+          } else if (parsed.decision_function) {
+            appendDecisionEntry(parsed.decision_function);
+            typingEl.remove();
+            contentEl = appendAssistantMessage(parsed.decision_function);
           } else if (parsed.content && contentEl) {
             fullContent += parsed.content;
             contentEl.innerHTML = marked.parse(fullContent);
@@ -294,6 +392,7 @@ async function handleSend() {
 function startNewChat() {
   sessionId = generateId();
   localStorage.setItem("sessionId", sessionId);
+  updateSessionBadge();
   headerTitle.textContent = "Chat";
   messagesEl.innerHTML = `
     <div class="welcome" id="welcome">

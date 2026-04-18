@@ -39,4 +39,12 @@ async def init_db() -> None:
                 created_at  REAL NOT NULL
             )
         """)
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS email_logs (
+                id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id    TEXT NOT NULL,
+                email      TEXT NOT NULL,
+                created_at REAL NOT NULL
+            )
+        """)
         await db.commit()

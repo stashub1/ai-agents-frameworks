@@ -34,6 +34,15 @@ async def list_all_sessions() -> list[dict]:
             return [dict(row) for row in rows]
 
 
+async def get_session_title(session_id: str) -> str | None:
+    async with aiosqlite.connect(DB_PATH) as db:
+        async with db.execute(
+            "SELECT title FROM sessions WHERE id = ?", (session_id,)
+        ) as cursor:
+            row = await cursor.fetchone()
+            return row[0] if row else None
+
+
 async def delete_session(session_id: str) -> None:
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute("DELETE FROM messages WHERE session_id = ?", (session_id,))
@@ -109,6 +118,27 @@ async def delete_task_by_id(task_id: int, user_id: str) -> bool:
         await db.execute("DELETE FROM tasks WHERE id = ? AND user_id = ?", (task_id, user_id))
         await db.commit()
         return True
+
+
+# ---------------------------------------- Email logs ----------------------------------------
+
+async def log_email(user_id: str, email: str) -> None:
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            "INSERT INTO email_logs (user_id, email, created_at) VALUES (?, ?, ?)",
+            (user_id, email, time.time()),
+        )
+        await db.commit()
+
+
+async def list_email_logs() -> list[dict]:
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        async with db.execute(
+            "SELECT id, user_id, email, created_at FROM email_logs ORDER BY created_at DESC"
+        ) as cursor:
+            rows = await cursor.fetchall()
+            return [dict(row) for row in rows]
 
 
 # ---------------------------------------- Helpers ----------------------------------------
